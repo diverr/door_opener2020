@@ -1,0 +1,72 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta charset="UTF-8">
+    <title>Abrir puerta</title>
+    <link rel="manifest" href="./manifest.json">
+    <link rel='stylesheet' href='./style.css'>
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+    <script>
+        if('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./service-worker.js');
+        };
+    </script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Abrir puerta">
+    <link rel="apple-touch-icon" href="icon-152x152.png">
+    <meta name="msapplication-TileImage" content="icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js" integrity="sha512-DZqqY3PiOvTP9HkjIWgjO6ouCbq+dxqWoJZ/Q+zPYNHmlnI2dQnbJ5bxAHpAMw+LXRm4D72EIRXzvcHQtE8/VQ==" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="main">
+        <div>
+            <img onclick="abrirPuerta()" src="remote.png" />
+        </div>
+    </div>
+</body>
+
+<script>
+    let urlCheck = "https://door.davidsantiago.net";
+    let urlOpen = "https://door.davidsantiago.net/38F3f2hf8hwrfopen";
+    axios.get(urlCheck)
+        .then(function(response) {
+            if(response.status === 200) {
+                toastr.success("Servicio preparado", "", {"timeOut": "1000", "positionClass": "toast-bottom-right"});
+            } else {
+                throw "Error";
+            }
+        })
+        .catch(function(error) {
+            toastr.error("Error de comunicación", "", {"timeOut": "1000", "positionClass": "toast-bottom-right"});
+        })
+
+    let abrirPuerta = function() {
+        toastr.remove();
+        toastr.info("Enviando solicitud", "", {"timeOut": "1000", "positionClass": "toast-top-right"});
+        axios.get(urlOpen)
+        .then(function(response) {
+            if(response.status === 200) {
+                toastr.success("Puerta abierta", "", {"timeOut": "1000", "positionClass": "toast-top-right"});
+            } else {
+                throw "Error";
+            }
+        })
+        .catch(function(error) {
+            toastr.error("Error de comunicación", "", {"timeOut": "1000", "positionClass": "toast-top-right"});
+        })
+    };
+</script>
+
+</html>
