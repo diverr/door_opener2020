@@ -28,45 +28,62 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js" integrity="sha512-DZqqY3PiOvTP9HkjIWgjO6ouCbq+dxqWoJZ/Q+zPYNHmlnI2dQnbJ5bxAHpAMw+LXRm4D72EIRXzvcHQtE8/VQ==" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="main">
         <div>
-            <img onclick="abrirPuerta()" src="remote.png" />
+            <img id="openButton" onclick="abrirPuerta()" src="remote.png" />
         </div>
     </div>
 </body>
 
 <script>
-    let urlCheck = "https://door.davidsantiago.net";
-    let urlOpen = "https://door.davidsantiago.net/38F3f2hf8hwrfopen";
-    axios.get(urlCheck)
-        .then(function(response) {
-            if(response.status === 200) {
-                toastr.success("Servicio preparado", "", {"timeOut": "1000", "positionClass": "toast-bottom-right"});
-            } else {
-                throw "Error";
-            }
-        })
-        .catch(function(error) {
-            toastr.error("Error de comunicación", "", {"timeOut": "1000", "positionClass": "toast-bottom-right"});
-        })
+    let urlCheck = "https://home.davidsantiago.net";
+    let urlOpen = "https://home.davidsantiago.net/38F3f2hf8hwrfopen";
+    // para test
+    // let urlOpen = "https://home.davidsantiago.net";
+
+    let init = function() {
+        axios.get(urlCheck)
+            .then(function(response) {
+                if(response.status === 200) {
+                    toastr.success("Servicio preparado", "", {"timeOut": "1000", "positionClass": "toast-bottom-right"});
+                } else {
+                    throw "Error";
+                }
+            })
+            .catch(function(error) {
+                toastr.error("Error de comunicación", "", {"timeOut": "1000", "positionClass": "toast-bottom-right"});
+            })
+    };
 
     let abrirPuerta = function() {
+        $('#openButton').css({'opacity': 0.3});
         toastr.remove();
-        toastr.info("Enviando solicitud", "", {"timeOut": "1000", "positionClass": "toast-top-right"});
+        toastr.info("Abriendo puerta...", "", {"positionClass": "toast-top-right"});
+        
         axios.get(urlOpen)
-        .then(function(response) {
-            if(response.status === 200) {
-                toastr.success("Puerta abierta", "", {"timeOut": "1000", "positionClass": "toast-top-right"});
-            } else {
-                throw "Error";
-            }
-        })
-        .catch(function(error) {
-            toastr.error("Error de comunicación", "", {"timeOut": "1000", "positionClass": "toast-top-right"});
-        })
+            .then(function(response) {
+                $('#openButton').css({'opacity': 1});
+                toastr.remove();
+                if(response.status === 200) {
+                    toastr.success("Puerta abierta", "", {"timeOut": "1000", "positionClass": "toast-top-right"});
+                    setTimeout(function() {
+                        window.close();
+                    }, 1000);
+                } else {
+                    throw "Error";
+                }
+            })
+            .catch(function(error) {
+                $('#openButton').css({'opacity': 1});
+                toastr.remove();
+                toastr.error("Error de comunicación", "", {"timeOut": "1000", "positionClass": "toast-top-right"});
+            })
     };
+
+    init();
 </script>
 
 </html>
