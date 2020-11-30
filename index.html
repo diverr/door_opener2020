@@ -40,7 +40,9 @@
 
 <script>
     let urlCheck = "https://home.davidsantiago.net";
-    let urlOpen = "https://home.davidsantiago.net/38F3f2hf8hwrfopen";
+    let urlOpen  = "https://home.davidsantiago.net/38F3f2hf8hwrfopen";
+    let opening  = false;
+
     // para test
     // let urlOpen = "https://home.davidsantiago.net";
 
@@ -59,24 +61,25 @@
     };
 
     let abrirPuerta = function() {
+        if(opening) return;
+        opening = true;
         $('#openButton').css({'opacity': 0.3});
         toastr.remove();
         toastr.info("Abriendo puerta...", "", {"positionClass": "toast-top-right"});
         
         axios.get(urlOpen)
             .then(function(response) {
+                opening = false;
                 $('#openButton').css({'opacity': 1});
                 toastr.remove();
                 if(response.status === 200) {
                     toastr.success("Puerta abierta", "", {"timeOut": "1000", "positionClass": "toast-top-right"});
-                    setTimeout(function() {
-                        window.close();
-                    }, 1000);
                 } else {
                     throw "Error";
                 }
             })
             .catch(function(error) {
+                opening = false;
                 $('#openButton').css({'opacity': 1});
                 toastr.remove();
                 toastr.error("Error de comunicación", "", {"timeOut": "1000", "positionClass": "toast-top-right"});
