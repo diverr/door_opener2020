@@ -28,17 +28,19 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js" integrity="sha512-DZqqY3PiOvTP9HkjIWgjO6ouCbq+dxqWoJZ/Q+zPYNHmlnI2dQnbJ5bxAHpAMw+LXRm4D72EIRXzvcHQtE8/VQ==" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="main">
         <div>
             <img id="openButton" onclick="abrirPuerta()" src="remote.png" />
         </div>
+        <br><br>
+        <div id="version" class="version"></div>
     </div>
 </body>
 
 <script>
+    let version  = "v1.1";
     let urlCheck = "https://home.davidsantiago.net";
     let urlOpen  = "https://home.davidsantiago.net/38F3f2hf8hwrfopen";
     let opening  = false;
@@ -47,6 +49,7 @@
     // let urlOpen = "https://home.davidsantiago.net";
 
     let init = function() {
+        $("#version").html(version);
         axios.get(urlCheck)
             .then(function(response) {
                 if(response.status === 200) {
@@ -86,7 +89,9 @@
             })
     };
 
-    init();
+    $(document).ready(function() {
+        init();
+    })
 </script>
 
 </html>
