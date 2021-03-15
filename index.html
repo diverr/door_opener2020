@@ -84,14 +84,14 @@
                 if(response.status === 200) {
                     toastr.success("Puerta abierta", "", {"timeOut": "1000", "positionClass": "toast-top-right"});
                 } else {
-                    throw "Error";
+                    throw "http status " + response.status;
                 }
             })
             .catch(function(error) {
                 opening = false;
                 $('#openButton').css({'opacity': 1});
                 toastr.remove();
-                toastr.error("Error de comunicación", "", {"timeOut": "1000", "positionClass": "toast-top-right"});
+                toastr.error("Error de comunicación - " + error, "", {"timeOut": "1000", "positionClass": "toast-top-right"});
             })
     };
 
