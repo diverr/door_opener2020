@@ -32,7 +32,7 @@
 <body>
     <div class="main">
         <div>
-            <img id="openButton" onclick="abrirPuerta()" src="remote.png" />
+            <img id="openButton" src="remote.png" />
         </div>
         <br><br>
         <div id="version" class="version"></div>
@@ -40,7 +40,7 @@
 </body>
 
 <script>
-    let version  = "v1.1";
+    let version  = "v1.2";
     let urlCheck = "https://home.davidsantiago.net";
     let urlOpen  = "https://home.davidsantiago.net/38F3f2hf8hwrfopen";
     let opening  = false;
@@ -50,6 +50,12 @@
 
     let init = function() {
         $("#version").html(version);
+
+        $("#abrirPuerta").on("touchstart", function(e) {
+            e.preventDefault();
+            abrirPuerta();
+        });
+
         axios.get(urlCheck)
             .then(function(response) {
                 if(response.status === 200) {
