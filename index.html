@@ -31,20 +31,27 @@
 </head>
 <body>
     <div class="main">
-        <div>
+        <div id="form">
+            <input type="text" id="key" placeholder="Introduce llave" />
+            <br>
+            <button id="btn-send">Enviar</button>
+        </div>
+        <div id="button">
             <img id="openButton" src="remote.png" />
         </div>
         <br><br>
         <div id="version" class="version"></div>
+        <div id="reset"></div>
     </div>
 </body>
 
 <script>
-    let version  = "v1.1.1";
+    let version  = "v1.2.0";
+    let key      = localStorage.getItem("key") ? localStorage.getItem("key") : "";
     let urlCheck = "https://home.davidsantiago.net";
-    let urlOpen  = "https://home.davidsantiago.net/38F3f2hf8hwrfopen";
+    let urlOpen  = "https://home.davidsantiago.net/" + key;
     let opening  = false;
-
+    
     // para test
     // let urlOpen = "https://home.davidsantiago.net";
 
@@ -55,6 +62,21 @@
             e.preventDefault();
             abrirPuerta();
         });
+
+        $("#btn-send").on("touchstart", function(e) {
+            e.preventDefault();
+            guardarKey();
+        });
+
+        $("#reset").on("touchstart", function(e) {
+            e.preventDefault();
+            resetKey();
+        });
+
+        if(key !== "") {
+            $("#form").hide();
+            $("#button").show();
+        }
 
         axios.get(urlCheck)
             .then(function(response) {
@@ -67,6 +89,25 @@
             .catch(function(error) {
                 toastr.error("Error de comunicación", "", {"timeOut": "1000", "positionClass": "toast-bottom-right"});
             })
+    };
+
+    let guardarKey = function() {
+        if(!$("#key").val() || $("#key").val() === "") return;
+
+        key     = $("#key").val();
+        urlOpen = urlOpen + key
+        
+        localStorage.setItem("key", key);
+
+        $("#form").hide();
+        $("#button").show();
+    };
+
+    let resetKey = function() {
+        localStorage.clear("key");
+        $("#key").val("");
+        $("#button").hide();
+        $("#form").show();
     };
 
     let abrirPuerta = function() {
